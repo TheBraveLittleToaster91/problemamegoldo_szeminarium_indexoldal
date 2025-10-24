@@ -1,0 +1,2 @@
+# problemamegoldo_szeminarium_indexoldal
+Indexoldal a Problémamegoldó szeminárium feladatainak bemutatására

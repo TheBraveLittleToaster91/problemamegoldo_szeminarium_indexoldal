@@ -1,0 +1,192 @@
+/* style.css */
+
+/* Színpaletta változók (Dark Mode) */
+:root {
+    --szin-hatter: #1c1c1c;         /* Sötétszürke háttér */
+    --szin-masodlagos-hatter: #2b2b2b; /* Kicsit világosabb háttér kártyákhoz/blokkokhoz */
+    --szin-betu: #f0f0f0;            /* Világosszürke betűszín */
+    --szin-kiemeles: #00b300;        /* Élénk zöld kiemelés (neon zöld) */
+    --szin-kiemeles-sotet: #007700;  /* Sötétebb zöld a hover effekthez */
+    --szin-kod: #111111;             /* Még sötétebb háttér a kódblokkokhoz */
+}
+
+/* Általános stílusok */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--szin-hatter);
+    color: var(--szin-betu);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--szin-masodlagos-hatter);
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 2px solid var(--szin-kiemeles);
+}
+
+header h1 {
+    color: var(--szin-kiemeles);
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li a {
+    color: var(--szin-betu);
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--szin-kiemeles);
+}
+
+.kontener {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h2 {
+    color: var(--szin-kiemeles);
+    border-bottom: 1px dashed var(--szin-kiemeles-sotet);
+    padding-bottom: 10px;
+    margin-top: 30px;
+}
+
+/* Kezdőlap kártyák stílusa */
+.kartya-elrendezes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding-top: 20px;
+}
+
+.kartya {
+    background-color: var(--szin-masodlagos-hatter);
+    border: 1px solid var(--szin-kiemeles-sotet);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.kartya:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 179, 0, 0.2); /* Zöld árnyék kiemeléskor */
+}
+
+.kartya a {
+    text-decoration: none;
+    color: var(--szin-betu);
+    display: block;
+}
+
+.kartya h3 {
+    color: var(--szin-kiemeles);
+    margin-top: 0;
+}
+
+.kartya p {
+    font-size: 0.9em;
+    color: #ababab;
+}
+
+/* Aloldalak stílusa */
+/* style.css - Kódblokk stílusa (VS Code Dark Theme utánzat) */
+
+/* Színpaletta változók frissítve a VS Code színeivel */
+:root {
+    --szin-hatter: #1c1c1c;         /* Sötétszürke háttér */
+    --szin-masodlagos-hatter: #2b2b2b; /* Kicsit világosabb háttér kártyákhoz/blokkokhoz */
+    --szin-betu: #f0f0f0;            /* Világosszürke betűszín */
+    --szin-kiemeles: #00b300;        /* Élénk zöld kiemelés */
+    --szin-kiemeles-sotet: #007700;  /* Sötétebb zöld a hover effekthez */
+    
+    /* Új VS Code-specifikus színek */
+    --szin-kod-hatter: #1e1e1e;      /* VS Code alap háttér */
+    --szin-sor-szam: #858585;        /* Szürke sorszám */
+    --szin-kulcsszo: #c586c0;        /* Magenta/Lila (pl. function, if, for) */
+    --szin-fuggveny: #dcdcaa;        /* Halványsárga (függvénynevek) */
+    --szin-sztring: #ce9178;         /* Narancssárga (sztringek) */
+    --szin-komment: #6a9955;         /* Zöld (kommentek) */
+    --szin-tipus: #4ec9b0;           /* Kék/Türkiz (adattípusok) */
+}
+
+/* ... (a korábbi általános body, header, kontener stílusok változatlanok maradhatnak) ... */
+
+
+/* Kódblokk konténer stílusa (VS Code utánzat) */
+.kod-blokk {
+    background-color: var(--szin-kod-hatter);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border: 1px solid var(--szin-kiemeles-sotet); /* Halvány keret */
+    margin-bottom: 20px;
+}
+
+/* Kód előformázás (pre) és kódszöveg (code) */
+.kod-blokk pre {
+    margin: 0;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--szin-betu);
+    display: grid;
+    /* Sorok sorszámának helye */
+    grid-template-columns: auto 1fr; 
+    gap: 15px; /* Távolság a sorszám és a kód között */
+}
+
+/* Kódsorok sorszámozása */
+.kod-blokk .sor-szam {
+    text-align: right;
+    color: var(--szin-sor-szam);
+    user-select: none; /* A sorszám nem kijelölhető */
+}
+
+/* Szintaxiskiemelés osztályai */
+.kulcsszo { color: var(--szin-kulcsszo); }
+.fuggveny { color: var(--szin-fuggveny); }
+.sztring { color: var(--szin-sztring); }
+.komment { color: var(--szin-komment); }
+.tipus { color: var(--szin-tipus); }
+.szam { color: var(--szin-tipus); } /* Számok a típus színével */
+
+.magyarazat p, .abra-leiras p {
+    color: #cccccc;
+}
+
+.abra-helye {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.abra-helye img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--szin-kiemeles-sotet);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 179, 0, 0.5);
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--szin-kiemeles-sotet);
+    color: #888888;
+    font-size: 0.8em;
+}

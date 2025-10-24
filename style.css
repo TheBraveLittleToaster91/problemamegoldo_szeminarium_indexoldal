@@ -53,9 +53,21 @@ nav ul li a:hover {
 }
 
 .kontener {
-    max-width: 1200px;
+    max-width: 1400px; /* Szélesebb konténer a két oszlop miatt */
     margin: 40px auto;
     padding: 0 20px;
+}
+
+/* Ha a képernyő keskeny, visszatérünk az egy oszlopos elrendezéshez */
+@media (max-width: 1000px) {
+    .grid-elrendezes {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Speciális stílus a kód és magyarázat blokkhoz (hogy kitöltsék a rendelkezésre álló helyet) */
+.kod-blokk, .kod-magyarazo-blokk, .magyarazat {
+    height: 100%;
 }
 
 h2 {
@@ -125,12 +137,18 @@ h2 {
     --szin-tipus: #4ec9b0;           /* Kék/Türkiz (adattípusok) */
 }
 
-/* ... (a korábbi általános body, header, kontener stílusok változatlanok maradhatnak) ... */
-
-
 /* Kódblokk konténer stílusa (VS Code utánzat) */
 .kod-blokk {
     background-color: var(--szin-kod-hatter);
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border: 1px solid var(--szin-kiemeles-sotet); /* Halvány keret */
+    margin-bottom: 20px;
+}
+
+.kod-magyarazo-blokk {
+    background-color: var(--szin-masodlagos-hatter);
     padding: 15px;
     border-radius: 5px;
     overflow-x: auto;
@@ -147,7 +165,7 @@ h2 {
     display: grid;
     /* Sorok sorszámának helye */
     grid-template-columns: auto 1fr; 
-    gap: 15px; /* Távolság a sorszám és a kód között */
+    gap: 0px 15px; /* Távolság a sorszám és a kód között */
 }
 
 /* Kódsorok sorszámozása */
@@ -189,4 +207,147 @@ footer {
     border-top: 1px solid var(--szin-kiemeles-sotet);
     color: #888888;
     font-size: 0.8em;
+}
+
+/* Specifikus stílus a bemenet/kimenet blokkokhoz a letisztultság érdekében */
+.spec-blokk {
+    background-color: var(--szin-masodlagos-hatter);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--szin-kiemeles);
+    border-radius: 4px;
+}
+
+.spec-blokk h3 {
+    color: var(--szin-kiemeles);
+    border-bottom: 1px dotted var(--szin-kiemeles-sotet);
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.spec-blokk pre {
+    margin: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--szin-betu);
+    font-size: 0.9em;
+}
+
+/* style.css - Kiegészítés a lapozható vizualizációhoz */
+
+/* Vizualizációs konténer */
+.carousel-kontener {
+    position: relative;
+    max-width: 800px;
+    margin: 30px auto 0px;
+    overflow: hidden; /* Elrejti a képeket, amik nincsenek az aktuális nézetben */
+    border: 2px solid var(--szin-kiemeles-sotet);
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 179, 0, 0.3);
+}
+
+/* A képeket tartalmazó belső sáv */
+.carousel-track {
+    display: flex;
+    transition: transform 0.4s ease-in-out; /* Animáció a sima átmenethez */
+}
+
+/* Egyedi vizualizációs lépés/dia */
+.carousel-step {
+    min-width: 100%; /* Minden dia kitölti a konténer teljes szélességét */
+    box-sizing: border-box;
+    text-align: center;
+    padding: 20px;
+}
+
+.carousel-step img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px;
+    border: 1px solid var(--szin-kiemeles-sotet);
+    border-radius: 5px;
+}
+
+/* Navigációs gombok */
+.carousel-nav button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 179, 0, 0.8); /* Zöld gombok áttetsző háttérrel */
+    color: var(--szin-betu);
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10; /* Biztosítja, hogy a gombok felül legyenek */
+    font-size: 18px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.carousel-nav button:hover {
+    background-color: var(--szin-kiemeles);
+}
+
+.carousel-nav .prev {
+    left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.carousel-nav .next {
+    right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Lépésszámláló */
+.step-counter {
+    text-align: center;
+    padding: 10px;
+    color: var(--szin-kiemeles);
+    font-weight: bold;
+    background-color: var(--szin-masodlagos-hatter);
+    border-top: 1px solid var(--szin-kiemeles-sotet);
+    width: 10%;
+    margin: 0 auto;
+}
+
+/* Két Oszlopos Grid Elrendezés */
+.grid-elrendezes {
+    display: grid;
+    /* Két egyenlő szélességű oszlopot hozunk létre */
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px; /* Oszlopok közötti távolság */
+    margin-bottom: 40px;
+}
+
+a {
+    color: var(--szin-kiemeles);
+}
+
+h3, h4 {
+    color: var(--szin-kiemeles)
+}
+
+.megoldas-menete {
+    border: var(--szin-kiemeles-sotet) 1px solid;
+    padding: 0 20px;
+    background-color: var(--szin-masodlagos-hatter);
+}
+
+code {
+    background-color: var(--szin-hatter);
+    color: var(--szin-kiemeles-sotet);
+    font-size: 1.2em;
+}
+
+body {
+    text-align: justify;
+}
+
+.ordo {
+    font-style:italic;
+    font-family:cursive;
 }

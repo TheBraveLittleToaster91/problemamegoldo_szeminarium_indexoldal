@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurzusütemezés</title>
+    <title>Reading Books</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <header>
-        <h1>Kurzusütemezés</h1>
+        <h1>Reading Books</h1>
         <nav>
             <ul>
                 <li><a href="../index.html">← Vissza a főoldalra</a></li>
@@ -19,36 +19,33 @@
             
         <section class="feladat-leiras">
             <h2>Feladat leírása
-                <a href="https://cses.fi/problemset/task/1679/" target="_blank" style="color: var(--szin-kiemeles); text-decoration: none; font-weight: bold;">
+                <a href="https://cses.fi/problemset/task/1631/" target="_blank" style="color: var(--szin-kiemeles); text-decoration: none; font-weight: bold;">
                     🔗
                 </a>
             </h2>
-            <p>Összesen <i>N</i> db kurzust kell teljesítened. Adott <i>M</i> db követelmény a következő alakban: "az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni".
-                A feladatod, hogy megtaláld azt a sorrendet, amelyben elvégezheted a kurzusokat.</p>
+            <p>Van <i>N</i> db könyv, Kotivalo és Justiina mindet el fogják olvasni. Minden könyv esetében tudjuk, hogy mennyi idő alatt olvassák el.
+                Mindketten elolvassák az összes könyvet az elejétől a végéig, de nem tudják egyszerre ugyanazt könyvet olvasni.
+                Mi a minimálisan szükséges idő az összes könyv elolvasásához?</p>
         </section>
         <div class="grid-elrendezes">
             <section class="spec-blokk">
                 <h3>Input</h3>
-                <p>Az első bemeneti sorban két egész szám, <i>N</i> és <i>M</i> szerepel: a kurzusok száma és a követelmények száma. A kurzusok számozása 1, 2, ..., <i>n</i>.
+                <p>Az első bemeneti sor egy egész számot tartalmaz, a könyvek számát: <i>N</i>
                     <br>
-                    Ezt követően <i>M</i> db sor következik, amelyek a követelményeket írják le. Minden sorban két egész szám, <i>A</i> és <i>B</i> található: az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni.</p>
+                    A második sor <i>N</i> db egész számot tartalmaz, az egyes könyvek elolvasásához szükséges időket: <i>t<sub>1</sub></i>, <i>t<sub>2</sub></i>, ..., <i>t<sub>N</sub></i></p>
             </section>
 
             <section class="spec-blokk">
                 <h3>Output</h3>
-                <p>Írj ki egy sorrendet, amelyben elvégezheted a kurzusokat. Kiírhatsz bármilyen érvényes sorrendet, amely tartalmazza az összes kurzust.
-                    <br>
-                    Ha nincs ilyen sorrend, akkor írd ki: <i>"IMPOSSIBLE"</i></p>
+                <p>Egy egész számot kell kiírni, a minimális szükséges összidőt a könyvek elolvasásához.</p>
             </section>
 
             <section class="spec-blokk">
                 <h3>Korlátozások</h3>
                 <p>
-                    1 &le; <i>n</i> &le; 10<sup>5</sup>
+                    1 &le; <i>n</i> &le; 2 &sdot; 10<sup>5</sup>
                     <br>
-                    1 &le; <i>m</i> &le; 2 &sdot; 10<sup>5</sup>
-                    <br>
-                    1 &le; <i>a,b</i> &le; 10<sup>5</sup>
+                    1 &le; <i>t<sub>i</sub></i> &le; 10<sup>9</sup>
                     </p>
             </section>
 
@@ -56,13 +53,11 @@
                 <h3>Példa</h3>
                 <pre>
 Input:
-5 3
-1 2
-3 1
-4 5
+3
+2 8 3
 
 Output:
-3 4 1 5 2
+16
                 </pre>
             </section>
         </div>
@@ -74,93 +69,33 @@ Output:
             <div class="kod-blokk">
         <pre>
 <span class="sor-szam">1</span><span class="sor-tartalom"><span class="kulcsszo">import</span> sys</span>
-<span class="sor-szam">2</span><span class="sor-tartalom"><span class="kulcsszo">from</span> collections <span class="kulcsszo">import</span> deque</span>
-<span class="sor-szam">3</span><span class="sor-tartalom"></span>
-<span class="sor-szam">4</span><span class="sor-tartalom">data = sys.stdin.readline().<span class="fuggveny">split</span>()</span>
-<span class="sor-szam">5</span><span class="sor-tartalom"></span>
-<span class="sor-szam">6</span><span class="sor-tartalom">n = <span class="fuggveny">int</span>(data[<span class="szam">0</span>])</span>
-<span class="sor-szam">7</span><span class="sor-tartalom">m = <span class="fuggveny">int</span>(data[<span class="szam">1</span>])</span>
+<span class="sor-szam">2</span><span class="sor-tartalom"></span>
+<span class="sor-szam">3</span><span class="sor-tartalom">T = <span class="fuggveny">list</span>(<span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">strip</span>().<span class="fuggveny">split</span>()))</span>
+<span class="sor-szam">4</span><span class="sor-tartalom"></span>
+<span class="sor-szam">5</span><span class="sor-tartalom">total_time_sum = <span class="fuggveny">sum</span>(T)</span>
+<span class="sor-szam">6</span><span class="sor-tartalom">max_time = <span class="fuggveny">max</span>(T)</span>
+<span class="sor-szam">7</span><span class="sor-tartalom">minimum_total_time = <span class="fuggveny">max</span>(total_time_sum, <span class="szam">2</span> * max_time)</span>
 <span class="sor-szam">8</span><span class="sor-tartalom"></span>
-<span class="sor-szam">9</span><span class="sor-tartalom">adj = [[] <span class="kulcsszo">for</span> _ <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(n + <span class="szam">1</span>)]</span>
-<span class="sor-szam">10</span><span class="sor-tartalom"></span>
-<span class="sor-szam">11</span><span class="sor-tartalom">indegree = [<span class="szam">0</span>] * (n + <span class="szam">1</span>)</span>
-<span class="sor-szam">12</span><span class="sor-tartalom"></span>
-<span class="sor-szam">13</span><span class="sor-tartalom"><span class="kulcsszo">for</span> _ <span class="kulcsswo">in</span> <span class="fuggveny">range</span>(m):</span>
-<span class="sor-szam">14</span><span class="sor-tartalom">    a, b = <span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">split</span>())</span>
-<span class="sor-szam">15</span><span class="sor-tartalom">    adj[a].<span class="fuggveny">append</span>(b)</span>
-<span class="sor-szam">16</span><span class="sor-tartalom">    indegree[b] += <span class="szam">1</span></span>
-<span class="sor-szam">17</span><span class="sor-tartalom"></span>
-<span class="sor-szam">18</span><span class="sor-tartalom">queue = <span class="fuggveny">deque</span>()</span>
-<span class="sor-szam">19</span><span class="sor-tartalom"><span class="kulcsszo">for</span> i <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(<span class="szam">1</span>, n + <span class="szam">1</span>):</span>
-<span class="sor-szam">20</span><span class="sor-tartalom">    <span class="kulcsszo">if</span> indegree[i] == <span class="szam">0</span>:</span>
-<span class="sor-szam">21</span><span class="sor-tartalom">        queue.<span class="fuggveny">append</span>(i)</span>
-<span class="sor-szam">22</span><span class="sor-tartalom"></span>
-<span class="sor-szam">23</span><span class="sor-tartalom">result = []</span>
-<span class="sor-szam">24</span><span class="sor-tartalom"></span>
-<span class="sor-szam">25</span><span class="sor-tartalom"><span class="kulcsszo">while</span> queue:</span>
-<span class="sor-szam">26</span><span class="sor-tartalom">    u = queue.<span class="fuggveny">popleft</span>()</span>
-<span class="sor-szam">27</span><span class="sor-tartalom">    result.<span class="fuggveny">append</span>(u)</span>
-<span class="sor-szam">28</span><span class="sor-tartalom"></span>
-<span class="sor-szam">29</span><span class="sor-tartalom">    <span class="kulcsswo">for</span> v <span class="kulcsswo">in</span> adj[u]:</span>
-<span class="sor-szam">30</span><span class="sor-tartalom">        indegree[v] -= <span class="szam">1</span></span>
-<span class="sor-szam">31</span><span class="sor-tartalom"></span>
-<span class="sor-szam">32</span><span class="sor-tartalom">        <span class="kulcsszo">if</span> indegree[v] == <span class="szam">0</span>:</span>
-<span class="sor-szam">33</span><span class="sor-tartalom">            queue.<span class="fuggveny">append</span>(v)</span>
-<span class="sor-szam">34</span><span class="sor-tartalom"></span>
-<span class="sor-szam">35</span><span class="sor-tartalom"><span class="kulcsszo">if</span> <span class="fuggveny">len</span>(result) == n:</span>
-<span class="sor-szam">36</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(*result)</span>
-<span class="sor-szam">37</span><span class="sor-tartalom"><span class="kulcsszo">else</span>:</span>
-<span class="sor-szam">38</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(<span class="sztring">"IMPOSSIBLE"</span>)</span>
+<span class="sor-szam">9</span><span class="sor-tartalom"><span class="fuggveny">print</span>(minimum_total_time)</span>
         </pre>
             </div>
 
             <div class="kod-magyarazo-blokk">
-                <h4>1. Gráf építés (1–16. sor)</h4>
+                <h4>I. Bemenet Kezelése (1-3. sor)</h4>
 
-                <p>A program felépíti az irányított gráfot a függőségek alapján:</p>
-                <ul>
-                    <li><strong>Bemenet (4–7. sor):</strong> Beolvassuk a kurzusok <i>N</i> és a követelmények <i>M</i> számát.</li>
-                    <li><strong>Gráf struktúra (9–11. sor):</strong> Létrehozzuk a gráfreprezentációt:
-                        <ul>
-                            <li><strong><code>adj</code></strong> (szomszédsági lista): Tárolja, hogy az <i>A</i> kurzus mely <i>B</i> kurzusok előfeltétele (<i>A</i> ⟶ <i>B</i>).</li>
-                            <li><strong><code>indegree</code></strong> (bejövő élek száma): Tárolja, hány előfeltétele van még hátra egy kurzusnak.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Gráf feltöltése (13–16. sor):</strong> Minden beolvasott (<i>A</i>, <i>B</i>) követelmény esetén:
-                        <ul>
-                            <li>Hozzáadjuk az <i>A</i> ⟶ <i>B</i> élt: <code>adj[a].append(b)</code></li>
-                            <li>Növeljük <i>B</i> előfeltételeinek számát: <code>indegree[b] += 1</code></li>
-                        </ul>
-                    </li>
-                </ul>
+                <p>A <code>T</code> lista tárolja a könyvek olvasási idejeit.</p>
 
-                <h4>2. Kezdő kurzusok betöltése (18–22. sor)</h4>
-
-                <p>Létrehozzuk a feldolgozáshoz szükséges sort:</p>
-                <ul>
-                    <li>Létrehozzuk a <code>queue</code>-t, ami az éppen elvégezhető kurzusokat tárolja.</li>
-                    <li>A sorba tesszük azokat a kurzusokat, amelyeknek a bejövő éleinek száma 0. Mivel ezeknek nincs előfeltétele, így azonnal elkezdhetők (19–21. sor).</li>
-                </ul>
-
-                <h4>3. Feldolgozás (23–33. sor)</h4>
-
-                <p>A <code>while</code> ciklus kiválasztja az elvégezhető kurzusokat, és frissíti a függőségeket:</p>
-                <ol>
-                    <li><strong>Kurzus kiválasztása (26–27. sor):</strong> Kivesszük az első elvégezhető kurzust a sorból, és hozzáadjuk a végső sorrendhez.</li>
-                    <li><strong>Függőségek oldása (29–33. sor):</strong> Végigmegyünk <code>u</code> összes <code>v</code> utódján:
-                        <ul>
-                            <li>Csökkentjük <code>v</code> függőségeinek számát: <code>indegree[v] -= 1</code></li>
-                            <li>Ha <code>v</code> bejövő éleinek száma 0 lett, az azt jelenti, hogy <code>v</code> összes előfeltétele teljesült. Ekkor <code>v</code>-t hozzáadjuk a sorhoz: <code>queue.append(v)</code></li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h4>4. Eredmény Ellenőrzése (35–38. sor)</h4>
+                <h4>II. Minimum Idő Kiszámítása (5-7. sor)</h4>
 
                 <ul>
-                    <li><strong>Megoldás van:</strong> Ha a <code>result</code> lista hossza megegyezik <i>N</i>-nel, kiírjuk az érvényes sorrendet.</li>
-                    <li><strong>IMPOSSIBLE:</strong> Ha a sorrend nem teljes, az azt jelenti, hogy maradtak feldolgozatlan kurzusok. Ebben az esetben a feladatot lehetetlen teljesíteni.</li>
+                    <li>Össz olvasási idő kiszámítása: <code>total_time_sum</code></li>
+                    <li>A leghosszabb könyv olvasási idejének kiszámolása: <code>max_time</code></li>
                 </ul>
+
+                <h4>III. Eredmény kiírása (9. sor)</h4>
+
+                <p><code>print(minimum_total_time)</code></p>
+
             </div>
             </div>
         </section>
@@ -168,115 +103,151 @@ Output:
         <section class="magyarazat">
             <h2>Magyarázat</h2>
 
-            <p>Egy kurzusfüggőségi problémát kellett megoldani. A cél, hogy a kurzusokat olyan sorrendbe tegyük, hogy minden előfeltétel teljesüljön.
-                A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rendezni.
-                A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy jól ismert topologikus rendezési algoritmus.
-                A logika, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
-            
-            <section class="vizualizacio-blokk">
-            <h3>Az algoritmus lépésről lépésre</h3>
-            
-            <div class="carousel-kontener">
-                <div class="carousel-track" id="carouselTrack">
-                    
-                    <!-- Minta
-                    <div class="carousel-step">
-                        <h3>Lépés 1: Inicializálás (Kahn-algoritmus)</h3>
-                        <img src="../kepek/kahn/01.webp" alt="A gráf beolvasása és az indegree tömb inicializálása">
-                        <p>Betöltjük a gráfot, és minden csúcsnál megszámoljuk a bejövő élek számát (indegree).</p>
-                    </div> -->
+            <h3>I. Alsó korlát meghatározása</h3>
+            <p>A minimum idő meghatározásához két alapvető korlátot kell figyelembe vennünk, amelyek közül a nagyobbik adja meg a végeredményt.</p>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/01.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/02.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/03.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/04.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/05.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/06.webp" alt="Kahn-algoritmus">
-                    </div>
-                    
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/07.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/08.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/09.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/10.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/11.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/12.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/13.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/14.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                </div>
-                
-                <div class="carousel-nav">
-                    <button class="prev" onclick="prevStep()">&#10094;</button>
-                    <button class="next" onclick="nextStep()">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="step-counter" id="stepCounter">Lépés 1 / 4</div>
-
-        </section>
-            
-            <h3>Miért a <code>deque</code> adattípus?</h3>
-
-            <p>Hatékonyság miatt a standard Python <code>list</code> helyett a <code>deque</code> (Double-Ended Queue) adattípust használtuk.</p>
             <ul>
-                <li>A Kahn-algoritmus egy sort (Queue) igényel, ahol az elemeket a sor elejéről vesszük ki (FIFO).</li>
-                <li>A <code>deque.popleft()</code> művelet a sor elejéről történő eltávolítást garantálja konstans időben: <span class="ordo">O</span>(1).</li>
-                <li>Ha standard Python <code>list</code>-et használnánk a sor elejéről való kivételhez, a művelet <span class="ordo">O</span>(N) időkomplexitású lenne (az elemek eltolása miatt), ami rontaná a teljes algoritmus teljesítményét.</li>
+                <li><strong>Korlát 1: Össz olvasási idő</strong> <code>total_time_sum</code>
+                <p>A <code>total_time_sum</code> változó tárolja az ahhoz szükséges időt, hogy egy ember végigolvassa az összes könyvet.
+                Ez egy triviális alsó korlát, ennél gyorsabban nem lehet elolvasni a könyveket.</p></li>
+                <li><strong>Korlát 2: A leghosszabb könyv olvasási idejének duplája</strong> <code>2 &sdot; max_time</code>
+                <p>A leghosszabb könyvet is mindkettejüknek el kell olvasni. Mivel egyszerre nem olvashatják ugyanazt a könyvet,
+                ezért a második olvasó csak akkor tudja elkezdeni a leghosszabb könyvet, ha már az első befejezte.</p>
+                </li>
             </ul>
 
-            <h3>Időkomplexitás</h3>
+            <h3>II. Ennyi idő alatt elolvashatók a könyvek</h3>
 
-            <p>Az algoritmus időkomplexitása:
-            <p style="text-align: center;"><strong><span class="ordo">O</span>(N + M)</strong>,</p>
-            <p>ahol <i>N</i> a kurzusok száma (csúcsok), és <i>M</i> a követelmények száma (élek).
-                Ez egy lineáris időben futó algoritmus, ami a lehető leggyorsabb. A komplexitás oka, hogy a teljes futásidő alatt minden csúcsot és minden élt pontosan egyszer dolgozunk fel.</p>
+            <p>Az előző részben felállítottunk egy alsó korlátot a könyvek olvasási idejére.
+                Most bebizonyítjuk, hogy a könyveket lehet úgy ütemezni, hogy valóban ennyi idő alatt olvassák el őket.</p>
+
+            <h4>1. eset: Az olvasási idő dominál</h4>
+            <p>Ekkor 2 &sdot; <i>t</i><sub>max</sub> &le; &sum;<i>t</i><sub>i</sub>, ezért a minimum idő: <i>T</i><sub>min</sub> = &sum;<i>t</i><sub>i</sub></p>
+
+            <p>Az olvasók ekkor válasszanak mohó stratégia szerint könyveket: mindig a leghosszabb aktuálisan szabad és még nem olvasott könyvet válasszák.</p>
+            <p>A kezdeti feltétel biztosítja a folyamatos ütemezést, azaz minden esetben lesz olvasnivalójuk, amíg be nem fejezik az összes könyvet.</p>
+
+            <h4>2. eset: A leghosszabb könyv dominál</h4>
+            <p>Ekkor 2 &sdot; <i>t</i><sub>max</sub> &ge; &sum;<i>t</i><sub>i</sub>, ezért a minimum idő: <i>T</i><sub>min</sub> = 2 &sdot; <i>t</i><sub>max</sub></p>
+
+            <p>Legyen <i>K</i> a leghosszabb könyv (<i>t</i><sub>max</sub>). A lényeg, hogy amíg az egyik olvasó a <i>K</i> könyvet olvassa, a másiknak a fennmaradó munkát kell végeznie.</p>
+
+            <ol>
+                <li><strong>[0, <i>t</i><sub>max</sub>] időszak:</strong> Első ember olvassa a <i>K</i> könyvet, második minden mást.</li>
+                <li><strong>[<i>t</i><sub>max</sub>, 2 <i>t</i><sub>max</sub>] időszak:</strong> Második ember olvassa a <i>K</i> könyvet, első minden mást.</li>
+            </ol>
+
+            <p>A kiindulási feltételünk szerint</p>
+            <p style="text-align: center; font-weight:bold">2 &sdot; <i>t</i><sub>max</sub> &ge; &sum;<i>t</i><sub>i</sub></p>
+            <p>Az egyenlőtlenség mindkét oldalából kivonva <i>t</i><sub>max</sub>-ot kapjuk, hogy</p>
+            <p style="text-align: center; font-weight:bold"><i>t</i><sub>max</sub> &ge; &sum;<i>t</i><sub>i</sub> - <i>t</i><sub>max</sub></p>
+            <p>ami azt jelenti, hogy az összes könyv, amelyik nem <i>K</i>, elolvasható <i>t</i><sub>max</sub> időn belül.</p>
+
+        </section>
+
+        <section class="kod-magyarazo-blokk">
+            <h3>Példák</h3>
+
+            <h4>1. Eset: Az össz olvasási idő dominál</h4>
+            <p><strong>Bemenet:</strong> A, B, C könyvek hossza: [8, 7, 8].
+                <br><strong>Korlátok:</strong> &sum;<i>t</i><sub>i</sub> = 23 és 2 &sdot; <i>t</i><sub>max</sub> = 16.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Időegység</th>
+                        <th>Kotivalo Olvasása</th>
+                        <th>Justiina Olvasása</th>
+                        <th>Könyv Állapot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0 - 8</strong></td>
+                        <td class="sum_time">Olvassa az A könyvet.</td>
+                        <td class="sum_time">Olvassa a C könyvet.</td>
+                        <td>K: A kész, J: C kész. Maximális párhuzamosság (2 különböző könyv).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8 - 15</strong></td>
+                        <td class="sum_time">Olvassa a B könyvet.</td>
+                        <td class="sum_time">Olvassa az A könyvet.</td>
+                        <td>A szabad lett Justiina számára t=8-nál.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>15 - 16</strong></td>
+                        <td class="sum_time">Olvassa a C könyvet.</td>
+                        <td class="sum_time">Olvassa az A könyvet.</td>
+                        <td>C szabad lett Kotivalo számára t=8-nál.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>16 - 23</strong></td>
+                        <td class="sum_time">Olvassa a C könyvet.</td>
+                        <td class="sum_time">Olvassa a B könyvet.</td>
+                        <td>B szabad lett Justiina számára t=15-nél. Mindketten befejezik az utolsó olvasásukat.</td>
+                    </tr>
+                    <tr class="summary-row">
+                        <td><strong>Összesen</strong></td>
+                        <td>23 egység (Kész t=23)</td>
+                        <td>23 egység (Kész t=23)</td>
+                        <td><strong>Teljes idő: 23</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>2. eset: A leghosszabb könyv dominál</h4>
+            <p><strong>Bemenet:</strong> A, B, C könyvek hossza: [10, 3, 1].
+                <br><strong>Korlátok:</strong> &sum;<i>t</i><sub>i</sub> = 14 és 2 &sdot; <i>t</i><sub>max</sub> = 20.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Időegység</th>
+                        <th>Kotivalo Olvasása</th>
+                        <th>Justiina Olvasása</th>
+                        <th>Megjegyzés</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0 - 10</strong></td>
+                        <td class="critical">Olvassa az A könyvet.</td>
+                        <td>Olvassa a B könyvet (0-3). Utána C könyvet (3-4). A többi időben (4-10) <span class="rest">pihen</span>.</td>
+                        <td>Kotivalo blokkolja a A könyvet. Justiina a kisebbeket fejezi be.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10 - 13</strong></td>
+                        <td>Olvassa a B könyvet.</td>
+                        <td class="critical">Olvassa az A könyvet.</td>
+                        <td>A szabad lett Justiina számára.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>13 - 14</strong></td>
+                        <td>Olvassa a C könyvet.</td>
+                        <td class="critical">Olvassa az A könyvet.</td>
+                        <td>Kotivalo befejezi utolsó könyvét (Kész t=14).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>14 - 20</strong></td>
+                        <td class="rest">Pihen (Kész)</td>
+                        <td class="critical">Olvassa az A könyvet.</td>
+                        <td>Justiina fejezi be a kritikus könyvet, ami zárja a teljes folyamatot.</td>
+                    </tr>
+                    <tr class="summary-row">
+                        <td><strong>Összesen</strong></td>
+                        <td>14 egység (Kész t=14)</td>
+                        <td>14 egység (Kész t=20)</td>
+                        <td><strong>Teljes idő: 20</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
         </section>
 
         <section>
-            <h2>Hasznos oldalak</h2>
-            <ul>
-                <li><a href="https://hu.wikipedia.org/wiki/Topologikus_sorrend" target="_blank">Topologikus sorrend</a></li>
-                <li><a href="https://www.geeksforgeeks.org/dsa/topological-sorting-indegree-based-solution/" target="_blank">Kahn's algorithm for Topological Sorting</a></li>
-            </ul>
+            <h3>Időkomplexitás</h3>
+
+            <p>Az algoritmus időkomplexitása:
+            <p style="text-align: center;"><strong><span class="ordo">O</span>(N)</strong>,</p>
+            <p>ahol <i>N</i> a könyvek száma. Az algoritmusnak a maximum és az összeg meghatározásához végig kell mennie az olvasási idők listáján.</p>
         </section>
 
     </div>
@@ -284,39 +255,5 @@ Output:
     <footer>
         <p>&copy; Pósfai Lőrinc, 2025</p>
     </footer>
-
-    <script>
-        const track = document.getElementById('carouselTrack');
-        const steps = track.querySelectorAll('.carousel-step');
-        const counter = document.getElementById('stepCounter');
-        let currentStep = 0;
-        const totalSteps = steps.length;
-
-        function updateCarousel() {
-            // A track mozgatása
-            const offset = -currentStep * 100;
-            track.style.transform = `translateX(${offset}%)`;
-
-            // A számláló frissítése
-            counter.textContent = `${currentStep + 1} / ${totalSteps}`;
-        }
-
-        function nextStep() {
-            if (currentStep < totalSteps - 1) {
-                currentStep++;
-                updateCarousel();
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                updateCarousel();
-            }
-        }
-
-        // Kezdeti állapot beállítása
-        updateCarousel();
-    </script>
 </body>
 </html>

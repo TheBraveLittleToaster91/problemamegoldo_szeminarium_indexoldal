@@ -327,7 +327,7 @@ a {
     color: var(--szin-kiemeles);
 }
 
-h3, h4 {
+h3, h4, h5 {
     color: var(--szin-kiemeles)
 }
 
@@ -350,4 +350,52 @@ body {
 .ordo {
     font-style:italic;
     font-family:cursive;
+}
+
+/* style.css - Táblázat stílusa (dark mode, zöld kiemelés) */
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Eltávolítja a dupla kereteket */
+    margin: 25px 0;
+    font-size: 0.95em;
+    text-align: left;
+    background-color: var(--szin-masodlagos-hatter); /* Sötétszürke háttér */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    overflow: hidden; /* Széleken lévő keret lekerekítése */
+}
+
+/* Táblázat fejléce */
+th {
+    background-color: var(--szin-kiemeles-sotet); /* Sötétebb zöld háttér */
+    color: var(--szin-betu); /* Világos szöveg */
+    padding: 12px 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--szin-kiemeles);
+}
+
+/* Táblázat cellái */
+td {
+    padding: 12px 15px;
+    color: var(--szin-betu); /* Világos szöveg */
+    border-bottom: 1px solid #3a3a3a; /* Finom elválasztóvonal */
+}
+
+/* Sorok váltakozó színezése a jobb olvashatóság érdekében */
+tr:nth-of-type(even) {
+    background-color: #252525; /* Kicsit sötétebb háttér minden második sornak */
+}
+
+/* Sor kiemelése egérrel (hover) */
+tr:hover {
+    background-color: #404040; /* Sötétebb szürke, ha ráviszik az egeret */
+    color: var(--szin-kiemeles); /* Zöld szöveg a kiemelt sorban */
+}
+
+/* Utolsó sor alsó keretének eltávolítása a letisztult megjelenésért */
+tr:last-of-type td {
+    border-bottom: none;
 }

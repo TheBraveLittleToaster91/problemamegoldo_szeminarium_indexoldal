@@ -29,7 +29,7 @@
         <div class="grid-elrendezes">
             <section class="spec-blokk">
                 <h3>Input</h3>
-                <p>Az első bemeneti sorban két egész szám, <i>N</i> és <i>M</i> szerepel: a kurzusok száma és a követelmények száma. A kurzusok számozása 1, 2, ..., <i>n</i>.
+                <p>Az első bemeneti sorban két egész szám, <i>N</i> és <i>M</i> szerepel: a kurzusok és a követelmények száma. A kurzusok számozása 1, 2, ..., <i>N</i>.
                     <br>
                     Ezt követően <i>M</i> db sor következik, amelyek a követelményeket írják le. Minden sorban két egész szám, <i>A</i> és <i>B</i> található: az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni.</p>
             </section>
@@ -101,7 +101,7 @@ Output:
 <span class="sor-szam">26</span><span class="sor-tartalom">    u = queue.<span class="fuggveny">popleft</span>()</span>
 <span class="sor-szam">27</span><span class="sor-tartalom">    result.<span class="fuggveny">append</span>(u)</span>
 <span class="sor-szam">28</span><span class="sor-tartalom"></span>
-<span class="sor-szam">29</span><span class="sor-tartalom">    <span class="kulcsswo">for</span> v <span class="kulcsswo">in</span> adj[u]:</span>
+<span class="sor-szam">29</span><span class="sor-tartalom">    <span class="kulcsszo">for</span> v <span class="kulcsszo">in</span> adj[u]:</span>
 <span class="sor-szam">30</span><span class="sor-tartalom">        indegree[v] -= <span class="szam">1</span></span>
 <span class="sor-szam">31</span><span class="sor-tartalom"></span>
 <span class="sor-szam">32</span><span class="sor-tartalom">        <span class="kulcsszo">if</span> indegree[v] == <span class="szam">0</span>:</span>
@@ -115,10 +115,10 @@ Output:
             </div>
 
             <div class="kod-magyarazo-blokk">
-                <h4>1. Gráf építés (1–16. sor)</h4>
+                <h4>I. Gráf építés (1–16. sor)</h4>
 
                 <p>A program felépíti az irányított gráfot a függőségek alapján:</p>
-                <ul>
+                <ol>
                     <li><strong>Bemenet (4–7. sor):</strong> Beolvassuk a kurzusok <i>N</i> és a követelmények <i>M</i> számát.</li>
                     <li><strong>Gráf struktúra (9–11. sor):</strong> Létrehozzuk a gráfreprezentációt:
                         <ul>
@@ -132,17 +132,17 @@ Output:
                             <li>Növeljük <i>B</i> előfeltételeinek számát: <code>indegree[b] += 1</code></li>
                         </ul>
                     </li>
-                </ul>
+                </ol>
 
-                <h4>2. Kezdő kurzusok betöltése (18–22. sor)</h4>
+                <h4>II. Kezdő kurzusok betöltése (18–22. sor)</h4>
 
                 <p>Létrehozzuk a feldolgozáshoz szükséges sort:</p>
-                <ul>
+                <ol>
                     <li>Létrehozzuk a <code>queue</code>-t, ami az éppen elvégezhető kurzusokat tárolja.</li>
-                    <li>A sorba tesszük azokat a kurzusokat, amelyeknek a bejövő éleinek száma 0. Mivel ezeknek nincs előfeltétele, így azonnal elkezdhetők (19–21. sor).</li>
-                </ul>
+                    <li>A sorba betesszük azokat a kurzusokat, amelyeknek a bejövő éleinek száma 0. Mivel ezeknek nincs előfeltétele, így azonnal elkezdhetők (19–21. sor).</li>
+                </ol>
 
-                <h4>3. Feldolgozás (23–33. sor)</h4>
+                <h4>III. Feldolgozás (23–33. sor)</h4>
 
                 <p>A <code>while</code> ciklus kiválasztja az elvégezhető kurzusokat, és frissíti a függőségeket:</p>
                 <ol>
@@ -155,11 +155,11 @@ Output:
                     </li>
                 </ol>
 
-                <h4>4. Eredmény Ellenőrzése (35–38. sor)</h4>
+                <h4>IV. Eredmény Ellenőrzése (35–38. sor)</h4>
 
                 <ul>
-                    <li><strong>Megoldás van:</strong> Ha a <code>result</code> lista hossza megegyezik <i>N</i>-nel, kiírjuk az érvényes sorrendet.</li>
-                    <li><strong>IMPOSSIBLE:</strong> Ha a sorrend nem teljes, az azt jelenti, hogy maradtak feldolgozatlan kurzusok. Ebben az esetben a feladatot lehetetlen teljesíteni.</li>
+                    <li><strong>Van megoldás:</strong> Ha a <code>result</code> lista hossza megegyezik <i>N</i>-nel, kiírjuk az érvényes sorrendet.</li>
+                    <li><strong>Nincs megoldás:</strong> Ha a sorrend nem teljes, az azt jelenti, hogy maradtak feldolgozatlan kurzusok. Ebben az esetben a feladatot lehetetlen teljesíteni.</li>
                 </ul>
             </div>
             </div>
@@ -170,7 +170,7 @@ Output:
 
             <p>Egy kurzusfüggőségi problémát kellett megoldani. A cél, hogy a kurzusokat olyan sorrendbe tegyük, hogy minden előfeltétel teljesüljön.
                 A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rendezni.
-                A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy jól ismert topologikus rendezési algoritmus.
+                A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy ismert topologikus rendezési algoritmus.
                 A logika, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
             
             <section class="vizualizacio-blokk">
@@ -260,7 +260,7 @@ Output:
             <ul>
                 <li>A Kahn-algoritmus egy sort (Queue) igényel, ahol az elemeket a sor elejéről vesszük ki (FIFO).</li>
                 <li>A <code>deque.popleft()</code> művelet a sor elejéről történő eltávolítást garantálja konstans időben: <span class="ordo">O</span>(1).</li>
-                <li>Ha standard Python <code>list</code>-et használnánk a sor elejéről való kivételhez, a művelet <span class="ordo">O</span>(N) időkomplexitású lenne (az elemek eltolása miatt), ami rontaná a teljes algoritmus teljesítményét.</li>
+                <li>Ha standard Python <code>list</code>-et használnánk a sor elejéről való kivételhez, a művelet <span class="ordo">O</span>(N) időkomplexitású lenne (az elemek memóriában történő eltolása miatt), ami rontaná a teljes algoritmus teljesítményét.</li>
             </ul>
 
             <h3>Időkomplexitás</h3>
@@ -268,7 +268,7 @@ Output:
             <p>Az algoritmus időkomplexitása:
             <p style="text-align: center;"><strong><span class="ordo">O</span>(N + M)</strong>,</p>
             <p>ahol <i>N</i> a kurzusok száma (csúcsok), és <i>M</i> a követelmények száma (élek).
-                Ez egy lineáris időben futó algoritmus, ami a lehető leggyorsabb. A komplexitás oka, hogy a teljes futásidő alatt minden csúcsot és minden élt pontosan egyszer dolgozunk fel.</p>
+                Ez egy lineáris időben futó algoritmus, a teljes futásidő alatt minden csúcsot és minden élt pontosan egyszer dolgozunk fel.</p>
         </section>
 
         <section>

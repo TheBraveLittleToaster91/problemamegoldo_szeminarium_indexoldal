@@ -19,26 +19,26 @@
             
         <section class="feladat-leiras">
             <h2>Feladat leírása
-                <a href="https://cses.fi/problemset/task/1679/" target="_blank" style="color: var(--szin-kiemeles); text-decoration: none; font-weight: bold;">
+                <a href="https://cses.fi/problemset/task/3421" target="_blank" style="color: var(--szin-kiemeles); text-decoration: none; font-weight: bold;">
                     🔗
                 </a>
             </h2>
-            <p>Összesen <i>N</i> db kurzust kell teljesítened. Adott <i>M</i> db követelmény a következő alakban: "az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni".
-                A feladatod, hogy megtaláld azt a sorrendet, amelyben elvégezheted a kurzusokat.</p>
+            <p>Adott egy <i>N</i> egész számból álló tömb. Számold meg az olyan részsorozatok számát, amelyekben az elemek páronként különböznek.
+                A részsorozat tömbelemek olyan balról jobbra haladó sorozata, amelyben lehetnek hézagok.</p>
         </section>
         <div class="grid-elrendezes">
             <section class="spec-blokk">
                 <h3>Input</h3>
-                <p>Az első bemeneti sorban két egész szám, <i>N</i> és <i>M</i> szerepel: a kurzusok száma és a követelmények száma. A kurzusok számozása 1, 2, ..., <i>n</i>.
+                <p>Az első sorban egy <i>N</i> egész szám szerepel: a tömb mérete.
                     <br>
-                    Ezt követően <i>M</i> db sor következik, amelyek a követelményeket írják le. Minden sorban két egész szám, <i>A</i> és <i>B</i> található: az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni.</p>
+                    A második sorban <i>N</i> egész szám van: <i>x<sub>1</sub></i>, <i>x<sub>2</sub></i>, ..., <i>x<sub>N</sub></i>: a tömb tartalma.</p>
             </section>
 
             <section class="spec-blokk">
                 <h3>Output</h3>
-                <p>Írj ki egy sorrendet, amelyben elvégezheted a kurzusokat. Kiírhatsz bármilyen érvényes sorrendet, amely tartalmazza az összes kurzust.
+                <p>Kiírja az eltérő elemekkel rendelkező részsorozatok számát.
                     <br>
-                    Ha nincs ilyen sorrend, akkor írd ki: <i>"IMPOSSIBLE"</i></p>
+                    A válasz nagy is lehet, ezért írd ki modulo 10<sup>9</sup>+7.</p>
             </section>
 
             <section class="spec-blokk">
@@ -46,7 +46,7 @@
                 <p>
                     1 &le; <i>n</i> &le; 10<sup>5</sup>
                     <br>
-                    1 &le; <i>m</i> &le; 2 &sdot; 10<sup>5</sup>
+                    1 &le; <i>x<sub>i</sub></i> &le; 2 &sdot; 10<sup>5</sup>
                     <br>
                     1 &le; <i>a,b</i> &le; 10<sup>5</sup>
                     </p>
@@ -56,13 +56,14 @@
                 <h3>Példa</h3>
                 <pre>
 Input:
-5 3
-1 2
-3 1
-4 5
+4
+1 2 1 3
 
 Output:
-3 4 1 5 2
+11
+
+Magyarázat:
+Az alsorozatok: [1] (kétszer), [2], [3], [1,2], [1,3] (kétszer), [2,1], [2,3], [1,2,3] és [2,1,3].
                 </pre>
             </section>
         </div>
@@ -72,211 +73,68 @@ Output:
             <h2>Megoldás Python kódja</h2>
             <div class="grid-elrendezes">
             <div class="kod-blokk">
-        <pre>
+                <pre>
 <span class="sor-szam">1</span><span class="sor-tartalom"><span class="kulcsszo">import</span> sys</span>
-<span class="sor-szam">2</span><span class="sor-tartalom"><span class="kulcsszo">from</span> collections <span class="kulcsszo">import</span> deque</span>
-<span class="sor-szam">3</span><span class="sor-tartalom"></span>
-<span class="sor-szam">4</span><span class="sor-tartalom">data = sys.stdin.readline().<span class="fuggveny">split</span>()</span>
-<span class="sor-szam">5</span><span class="sor-tartalom"></span>
-<span class="sor-szam">6</span><span class="sor-tartalom">n = <span class="fuggveny">int</span>(data[<span class="szam">0</span>])</span>
-<span class="sor-szam">7</span><span class="sor-tartalom">m = <span class="fuggveny">int</span>(data[<span class="szam">1</span>])</span>
-<span class="sor-szam">8</span><span class="sor-tartalom"></span>
-<span class="sor-szam">9</span><span class="sor-tartalom">adj = [[] <span class="kulcsszo">for</span> _ <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(n + <span class="szam">1</span>)]</span>
-<span class="sor-szam">10</span><span class="sor-tartalom"></span>
-<span class="sor-szam">11</span><span class="sor-tartalom">indegree = [<span class="szam">0</span>] * (n + <span class="szam">1</span>)</span>
+<span class="sor-szam">2</span><span class="sor-tartalom"></span>
+<span class="sor-szam">3</span><span class="sor-tartalom">MOD = <span class="szam">10</span>**<span class="szam">9</span> + <span class="szam">7</span></span>
+<span class="sor-szam">4</span><span class="sor-tartalom"></span>
+<span class="sor-szam">5</span><span class="sor-tartalom">n = <span class="fuggveny">int</span>(sys.stdin.readline().<span class="fuggveny">strip</span>())</span>
+<span class="sor-szam">6</span><span class="sor-tartalom">a = <span class="fuggveny">list</span>(<span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">strip</span>().<span class="fuggveny">split</span>()))</span>
+<span class="sor-szam">7</span><span class="sor-tartalom"></span>
+<span class="sor-szam">8</span><span class="sor-tartalom">freq = {}</span>
+<span class="sor-szam">9</span><span class="sor-tartalom"></span>
+<span class="sor-szam">10</span><span class="sor-tartalom"><span class="kulcsszo">for</span> val <span class="kulcsszo">in</span> a:</span>
+<span class="sor-szam">11</span><span class="sor-tartalom">    freq[val] = freq.<span class="fuggveny">get</span>(val, <span class="szam">0</span>) + <span class="szam">1</span></span>
 <span class="sor-szam">12</span><span class="sor-tartalom"></span>
-<span class="sor-szam">13</span><span class="sor-tartalom"><span class="kulcsszo">for</span> _ <span class="kulcsswo">in</span> <span class="fuggveny">range</span>(m):</span>
-<span class="sor-szam">14</span><span class="sor-tartalom">    a, b = <span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">split</span>())</span>
-<span class="sor-szam">15</span><span class="sor-tartalom">    adj[a].<span class="fuggveny">append</span>(b)</span>
-<span class="sor-szam">16</span><span class="sor-tartalom">    indegree[b] += <span class="szam">1</span></span>
-<span class="sor-szam">17</span><span class="sor-tartalom"></span>
-<span class="sor-szam">18</span><span class="sor-tartalom">queue = <span class="fuggveny">deque</span>()</span>
-<span class="sor-szam">19</span><span class="sor-tartalom"><span class="kulcsszo">for</span> i <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(<span class="szam">1</span>, n + <span class="szam">1</span>):</span>
-<span class="sor-szam">20</span><span class="sor-tartalom">    <span class="kulcsszo">if</span> indegree[i] == <span class="szam">0</span>:</span>
-<span class="sor-szam">21</span><span class="sor-tartalom">        queue.<span class="fuggveny">append</span>(i)</span>
-<span class="sor-szam">22</span><span class="sor-tartalom"></span>
-<span class="sor-szam">23</span><span class="sor-tartalom">result = []</span>
-<span class="sor-szam">24</span><span class="sor-tartalom"></span>
-<span class="sor-szam">25</span><span class="sor-tartalom"><span class="kulcsszo">while</span> queue:</span>
-<span class="sor-szam">26</span><span class="sor-tartalom">    u = queue.<span class="fuggveny">popleft</span>()</span>
-<span class="sor-szam">27</span><span class="sor-tartalom">    result.<span class="fuggveny">append</span>(u)</span>
-<span class="sor-szam">28</span><span class="sor-tartalom"></span>
-<span class="sor-szam">29</span><span class="sor-tartalom">    <span class="kulcsswo">for</span> v <span class="kulcsswo">in</span> adj[u]:</span>
-<span class="sor-szam">30</span><span class="sor-tartalom">        indegree[v] -= <span class="szam">1</span></span>
-<span class="sor-szam">31</span><span class="sor-tartalom"></span>
-<span class="sor-szam">32</span><span class="sor-tartalom">        <span class="kulcsszo">if</span> indegree[v] == <span class="szam">0</span>:</span>
-<span class="sor-szam">33</span><span class="sor-tartalom">            queue.<span class="fuggveny">append</span>(v)</span>
-<span class="sor-szam">34</span><span class="sor-tartalom"></span>
-<span class="sor-szam">35</span><span class="sor-tartalom"><span class="kulcsszo">if</span> <span class="fuggveny">len</span>(result) == n:</span>
-<span class="sor-szam">36</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(*result)</span>
-<span class="sor-szam">37</span><span class="sor-tartalom"><span class="kulcsszo">else</span>:</span>
-<span class="sor-szam">38</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(<span class="sztring">"IMPOSSIBLE"</span>)</span>
-        </pre>
+<span class="sor-szam">13</span><span class="sor-tartalom">result = <span class="szam">1</span></span>
+<span class="sor-szam">14</span><span class="sor-tartalom"><span class="kulcsszo">for</span> f <span class="kulcsszo">in</span> freq.<span class="fuggveny">values</span>():</span>
+<span class="sor-szam">15</span><span class="sor-tartalom">    result = (result * (f + <span class="szam">1</span>)) % MOD</span>
+<span class="sor-szam">16</span><span class="sor-tartalom"></span>
+<span class="sor-szam">17</span><span class="sor-tartalom">result = (result - <span class="szam">1</span> + MOD) % MOD</span>
+<span class="sor-szam">18</span><span class="sor-tartalom"></span>
+<span class="sor-szam">19</span><span class="sor-tartalom"><span class="fuggveny">print</span>(result)</span>
+                </pre>
             </div>
 
             <div class="kod-magyarazo-blokk">
-                <h4>1. Gráf építés (1–16. sor)</h4>
-
-                <p>A program felépíti az irányított gráfot a függőségek alapján:</p>
-                <ul>
-                    <li><strong>Bemenet (4–7. sor):</strong> Beolvassuk a kurzusok <i>N</i> és a követelmények <i>M</i> számát.</li>
-                    <li><strong>Gráf struktúra (9–11. sor):</strong> Létrehozzuk a gráfreprezentációt:
-                        <ul>
-                            <li><strong><code>adj</code></strong> (szomszédsági lista): Tárolja, hogy az <i>A</i> kurzus mely <i>B</i> kurzusok előfeltétele (<i>A</i> ⟶ <i>B</i>).</li>
-                            <li><strong><code>indegree</code></strong> (bejövő élek száma): Tárolja, hány előfeltétele van még hátra egy kurzusnak.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Gráf feltöltése (13–16. sor):</strong> Minden beolvasott (<i>A</i>, <i>B</i>) követelmény esetén:
-                        <ul>
-                            <li>Hozzáadjuk az <i>A</i> ⟶ <i>B</i> élt: <code>adj[a].append(b)</code></li>
-                            <li>Növeljük <i>B</i> előfeltételeinek számát: <code>indegree[b] += 1</code></li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h4>2. Kezdő kurzusok betöltése (18–22. sor)</h4>
-
-                <p>Létrehozzuk a feldolgozáshoz szükséges sort:</p>
-                <ul>
-                    <li>Létrehozzuk a <code>queue</code>-t, ami az éppen elvégezhető kurzusokat tárolja.</li>
-                    <li>A sorba tesszük azokat a kurzusokat, amelyeknek a bejövő éleinek száma 0. Mivel ezeknek nincs előfeltétele, így azonnal elkezdhetők (19–21. sor).</li>
-                </ul>
-
-                <h4>3. Feldolgozás (23–33. sor)</h4>
-
-                <p>A <code>while</code> ciklus kiválasztja az elvégezhető kurzusokat, és frissíti a függőségeket:</p>
-                <ol>
-                    <li><strong>Kurzus kiválasztása (26–27. sor):</strong> Kivesszük az első elvégezhető kurzust a sorból, és hozzáadjuk a végső sorrendhez.</li>
-                    <li><strong>Függőségek oldása (29–33. sor):</strong> Végigmegyünk <code>u</code> összes <code>v</code> utódján:
-                        <ul>
-                            <li>Csökkentjük <code>v</code> függőségeinek számát: <code>indegree[v] -= 1</code></li>
-                            <li>Ha <code>v</code> bejövő éleinek száma 0 lett, az azt jelenti, hogy <code>v</code> összes előfeltétele teljesült. Ekkor <code>v</code>-t hozzáadjuk a sorhoz: <code>queue.append(v)</code></li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h4>4. Eredmény Ellenőrzése (35–38. sor)</h4>
+                <h3>1. Elemek gyakoriságának számítása (8-11. sor)</h3>
 
                 <ul>
-                    <li><strong>Megoldás van:</strong> Ha a <code>result</code> lista hossza megegyezik <i>N</i>-nel, kiírjuk az érvényes sorrendet.</li>
-                    <li><strong>IMPOSSIBLE:</strong> Ha a sorrend nem teljes, az azt jelenti, hogy maradtak feldolgozatlan kurzusok. Ebben az esetben a feladatot lehetetlen teljesíteni.</li>
+                    <li>A kód először megszámolja, hogy az egyes értékek hányszor fordulnak elő a bemeneti tömbben.</li>
+                    <li>A <code>freq</code> szótár tárolja az egyes értékekhez tartozó gyakoriságot.</li>
+                    <li><strong>Példa:</strong> (1, 2, 1, 3) bemenet esetén <i>freq = {1: 2, 2: 1, 3: 1}</i>.</li>
                 </ul>
+
+                <h3>2. Kombinatorikai Számítás (13-15. sor)</h3>
+
+                <p>Az elemenként különböző részsorozatot úgy állítjuk össze, hogy minden egyes egyedi értékre eldöntjük, hogy szerepel-e benne, és ha igen, melyik előfordulását választjuk.</p>
+                <ul>
+                    <li>Ha egy értéket be akarunk tenni a részsorozatunkba, és az az elem <i>f</i> alkalommal fordul elő, akkor <i>f</i> különböző pozícióból választhatjuk ki.</li>
+                    <li>Ha nem választjuk ki az értéket, az 1 lehetőség.</li>
+                </ul>
+                <p>Így összesen: <i>f</i> + 1 választási lehetőség van egy adott elemre. Mivel a különböző értékek választása egymástól független, a teljes szám a lehetőségek szorzata:</p>
+
+                <p style="text-align:center">Összes lehetőség = &prod;(f(x) + 1)</p>
+
+                <p><strong>Példa:</strong> (1, 2, 1, 3) bemenet esetén <i>result = (2+1) (1+1) (1+1) = 12</i></p>
+
+                <h3>3. Az Üres Részsorozat Kivonása (17. sor)</h3>
+
+                <p>Az így kiszámolt eredmény tartalmazza azt az esetet is, amikor minden elemnél a "nem választom" opciót választottuk. Ez az üres részsorozat, ami nem egy valós output, ezért ezt az egy esetet ki kell vonni.</p>
+                <p><strong>Példa:</strong> (1, 2, 1, 3) bemenet esetén <i>result = 12 - 1 = 11</i></p>
             </div>
             </div>
         </section>
 
         <section class="magyarazat">
-            <h2>Magyarázat</h2>
-
-            <p>Egy kurzusfüggőségi problémát kellett megoldani. A cél, hogy a kurzusokat olyan sorrendbe tegyük, hogy minden előfeltétel teljesüljön.
-                A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rendezni.
-                A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy jól ismert topologikus rendezési algoritmus.
-                A logika, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
-            
-            <section class="vizualizacio-blokk">
-            <h3>Az algoritmus lépésről lépésre</h3>
-            
-            <div class="carousel-kontener">
-                <div class="carousel-track" id="carouselTrack">
-                    
-                    <!-- Minta
-                    <div class="carousel-step">
-                        <h3>Lépés 1: Inicializálás (Kahn-algoritmus)</h3>
-                        <img src="../kepek/kahn/01.webp" alt="A gráf beolvasása és az indegree tömb inicializálása">
-                        <p>Betöltjük a gráfot, és minden csúcsnál megszámoljuk a bejövő élek számát (indegree).</p>
-                    </div> -->
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/01.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/02.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/03.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/04.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/05.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/06.webp" alt="Kahn-algoritmus">
-                    </div>
-                    
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/07.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/08.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/09.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/10.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/11.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/12.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/13.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/14.webp" alt="Kahn-algoritmus">
-                    </div>
-
-                </div>
-                
-                <div class="carousel-nav">
-                    <button class="prev" onclick="prevStep()">&#10094;</button>
-                    <button class="next" onclick="nextStep()">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="step-counter" id="stepCounter">Lépés 1 / 4</div>
-
-        </section>
-            
-            <h3>Miért a <code>deque</code> adattípus?</h3>
-
-            <p>Hatékonyság miatt a standard Python <code>list</code> helyett a <code>deque</code> (Double-Ended Queue) adattípust használtuk.</p>
-            <ul>
-                <li>A Kahn-algoritmus egy sort (Queue) igényel, ahol az elemeket a sor elejéről vesszük ki (FIFO).</li>
-                <li>A <code>deque.popleft()</code> művelet a sor elejéről történő eltávolítást garantálja konstans időben: <span class="ordo">O</span>(1).</li>
-                <li>Ha standard Python <code>list</code>-et használnánk a sor elejéről való kivételhez, a művelet <span class="ordo">O</span>(N) időkomplexitású lenne (az elemek eltolása miatt), ami rontaná a teljes algoritmus teljesítményét.</li>
-            </ul>
-
             <h3>Időkomplexitás</h3>
 
-            <p>Az algoritmus időkomplexitása:
-            <p style="text-align: center;"><strong><span class="ordo">O</span>(N + M)</strong>,</p>
-            <p>ahol <i>N</i> a kurzusok száma (csúcsok), és <i>M</i> a követelmények száma (élek).
-                Ez egy lineáris időben futó algoritmus, ami a lehető leggyorsabb. A komplexitás oka, hogy a teljes futásidő alatt minden csúcsot és minden élt pontosan egyszer dolgozunk fel.</p>
-        </section>
-
-        <section>
-            <h2>Hasznos oldalak</h2>
             <ul>
-                <li><a href="https://hu.wikipedia.org/wiki/Topologikus_sorrend" target="_blank">Topologikus sorrend</a></li>
-                <li><a href="https://www.geeksforgeeks.org/dsa/topological-sorting-indegree-based-solution/" target="_blank">Kahn's algorithm for Topological Sorting</a></li>
+                <li><strong>Gyakoriságok számítása:</strong> A tömbön <i>N</i> iteráció történik. A hash-tábla műveletek átlagos ideje <span class="ordo">O(1)</span>, így az időigény ennél a lépésnél: <span class="ordo">O(N)</span>.</li>
+                <li><strong>Eredmény számítása:</strong> A ciklus a különböző elemek számán fut végig, azaz legfeljebb <i>N</i>-szer. Minden művelet <span class="ordo">O(1)</span> idejű.</li>
             </ul>
+            <p>A megoldás összesített időigénye így:
+                <p style="text-align: center;"><strong><span class="ordo">O</span>(N)</strong></p>
         </section>
 
     </div>
@@ -285,38 +143,5 @@ Output:
         <p>&copy; Pósfai Lőrinc, 2025</p>
     </footer>
 
-    <script>
-        const track = document.getElementById('carouselTrack');
-        const steps = track.querySelectorAll('.carousel-step');
-        const counter = document.getElementById('stepCounter');
-        let currentStep = 0;
-        const totalSteps = steps.length;
-
-        function updateCarousel() {
-            // A track mozgatása
-            const offset = -currentStep * 100;
-            track.style.transform = `translateX(${offset}%)`;
-
-            // A számláló frissítése
-            counter.textContent = `${currentStep + 1} / ${totalSteps}`;
-        }
-
-        function nextStep() {
-            if (currentStep < totalSteps - 1) {
-                currentStep++;
-                updateCarousel();
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                updateCarousel();
-            }
-        }
-
-        // Kezdeti állapot beállítása
-        updateCarousel();
-    </script>
 </body>
 </html>

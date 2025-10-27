@@ -31,7 +31,7 @@ int main() {
 
     std::priority_queue<std::pair<int, int>,
                         std::vector<std::pair<int, int>>,
-                        std::greater<>> free_rooms;
+                        std::greater<>> booked_rooms;
 
     std::priority_queue<int, std::vector<int>, std::greater<>> available_room_ids;
     for (int i = 1; i <= n; ++i) {
@@ -41,19 +41,19 @@ int main() {
     int max_rooms_needed = 0;
 
     for (auto& [arrival, departure, original_index] : customers) {
-        if (!free_rooms.empty() && free_rooms.top().first < arrival) {
-            auto [old_departure, room_id] = free_rooms.top();
-            free_rooms.pop();
+        if (!booked_rooms.empty() && booked_rooms.top().first < arrival) {
+            auto [old_departure, room_id] = booked_rooms.top();
+            booked_rooms.pop();
 
             room_allocations[original_index] = room_id;
-            free_rooms.emplace(departure, room_id);
+            booked_rooms.emplace(departure, room_id);
         } else {
             int room_id = available_room_ids.top();
             available_room_ids.pop();
             max_rooms_needed = std::max(max_rooms_needed, room_id);
 
             room_allocations[original_index] = room_id;
-            free_rooms.emplace(departure, room_id);
+            booked_rooms.emplace(departure, room_id);
         }
     }
 

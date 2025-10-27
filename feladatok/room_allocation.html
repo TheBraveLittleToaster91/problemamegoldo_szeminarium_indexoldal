@@ -23,32 +23,32 @@
                     🔗
                 </a>
             </h2>
-            <p>Összesen <i>N</i> db kurzust kell teljesítened. Adott <i>M</i> db követelmény a következő alakban: "az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni".
-                A feladatod, hogy megtaláld azt a sorrendet, amelyben elvégezheted a kurzusokat.</p>
+            <p>Van egy nagy szálloda, és <i>N</i> vendég érkezik hamarosan. Minden vendég egyetlen szobát szeretne.
+                Ismered minden vendég érkezésének és távozásának napját.
+                Két vendég csak úgy szállhat meg ugyanabban a szobában, ha az első vendég korábban távozik, mint ahogy a második érkezik.
+                Minimum hány szoba szükséges az összes vendég elszállásolásához? És hogyan lehet a szobákat elosztani?</p>
         </section>
         <div class="grid-elrendezes">
             <section class="spec-blokk">
                 <h3>Input</h3>
-                <p>Az első bemeneti sorban két egész szám, <i>N</i> és <i>M</i> szerepel: a kurzusok száma és a követelmények száma. A kurzusok számozása 1, 2, ..., <i>n</i>.
+                <p>Az első bemeneti sor egy n egész számot tartalmaz: a vendégek számát.
                     <br>
-                    Ezt követően <i>M</i> db sor következik, amelyek a követelményeket írják le. Minden sorban két egész szám, <i>A</i> és <i>B</i> található: az <i>A</i> kurzust a <i>B</i> kurzus előtt kell elvégezni.</p>
+                    Ezután <i>N</i> sor következik, amelyek mindegyike egy-egy vendég tartózkodását írja le. Minden sorban két egész szám van, az érkezés és a távozás napja: <i>A</i> és <i>B</i>.</p>
             </section>
 
             <section class="spec-blokk">
                 <h3>Output</h3>
-                <p>Írj ki egy sorrendet, amelyben elvégezheted a kurzusokat. Kiírhatsz bármilyen érvényes sorrendet, amely tartalmazza az összes kurzust.
+                <p>Először írd ki a szükséges szobák minimális számát: <i>k</i>.
                     <br>
-                    Ha nincs ilyen sorrend, akkor írd ki: <i>"IMPOSSIBLE"</i></p>
+                    Ezután írj ki egy sort, amely tartalmazza az egyes vendégek szobaszámait ugyanabban a sorrendben, ahogy az inputban voltak a vendégek. A szobaszámok 1, 2, ..., <i>k</i> számozásúak. Bármelyik helyes számozást kiírhatod.</p>
             </section>
 
             <section class="spec-blokk">
                 <h3>Korlátozások</h3>
                 <p>
-                    1 &le; <i>n</i> &le; 10<sup>5</sup>
+                    1 &le; <i>N</i> &le; 2 &sdot; 10<sup>5</sup>
                     <br>
-                    1 &le; <i>m</i> &le; 2 &sdot; 10<sup>5</sup>
-                    <br>
-                    1 &le; <i>a,b</i> &le; 10<sup>5</sup>
+                    1 &le; <i>A, B</i> &le; 10<sup>5</sup>
                     </p>
             </section>
 
@@ -56,13 +56,14 @@
                 <h3>Példa</h3>
                 <pre>
 Input:
-5 3
+3
 1 2
-3 1
-4 5
+2 4
+4 4
 
 Output:
-3 4 1 5 2
+2
+1 2 1
                 </pre>
             </section>
         </div>
@@ -72,95 +73,88 @@ Output:
             <h2>Megoldás Python kódja</h2>
             <div class="grid-elrendezes">
             <div class="kod-blokk">
-        <pre>
-<span class="sor-szam">1</span><span class="sor-tartalom"><span class="kulcsszo">import</span> sys</span>
-<span class="sor-szam">2</span><span class="sor-tartalom"><span class="kulcsszo">from</span> collections <span class="kulcsszo">import</span> deque</span>
+                <pre>
+<span class="sor-szam">1</span><span class="sor-tartalom"><span class="kulcsszo">import</span> heapq</span>
+<span class="sor-szam">2</span><span class="sor-tartalom"><span class="kulcsszo">import</span> sys</span>
 <span class="sor-szam">3</span><span class="sor-tartalom"></span>
-<span class="sor-szam">4</span><span class="sor-tartalom">data = sys.stdin.readline().<span class="fuggveny">split</span>()</span>
+<span class="sor-szam">4</span><span class="sor-tartalom">n = <span class="fuggveny">int</span>(sys.stdin.readline().<span class="fuggveny">strip</span>())</span>
 <span class="sor-szam">5</span><span class="sor-tartalom"></span>
-<span class="sor-szam">6</span><span class="sor-tartalom">n = <span class="fuggveny">int</span>(data[<span class="szam">0</span>])</span>
-<span class="sor-szam">7</span><span class="sor-tartalom">m = <span class="fuggveny">int</span>(data[<span class="szam">1</span>])</span>
-<span class="sor-szam">8</span><span class="sor-tartalom"></span>
-<span class="sor-szam">9</span><span class="sor-tartalom">adj = [[] <span class="kulcsszo">for</span> _ <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(n + <span class="szam">1</span>)]</span>
+<span class="sor-szam">6</span><span class="sor-tartalom">customers = []</span>
+<span class="sor-szam">7</span><span class="sor-tartalom"><span class="kulcsszo">for</span> i <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(n):</span>
+<span class="sor-szam">8</span><span class="sor-tartalom">    a, b = <span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">strip</span>().<span class="fuggveny">split</span>())</span>
+<span class="sor-szam">9</span><span class="sor-tartalom">    customers.<span class="fuggveny">append</span>((a, b, i))</span>
 <span class="sor-szam">10</span><span class="sor-tartalom"></span>
-<span class="sor-szam">11</span><span class="sor-tartalom">indegree = [<span class="szam">0</span>] * (n + <span class="szam">1</span>)</span>
+<span class="sor-szam">11</span><span class="sor-tartalom">customers.<span class="fuggveny">sort</span>(<span class="kulcsszo">key</span>=<span class="kulcsszo">lambda</span> x: x[<span class="szam">0</span>])</span>
 <span class="sor-szam">12</span><span class="sor-tartalom"></span>
-<span class="sor-szam">13</span><span class="sor-tartalom"><span class="kulcsszo">for</span> _ <span class="kulcsswo">in</span> <span class="fuggveny">range</span>(m):</span>
-<span class="sor-szam">14</span><span class="sor-tartalom">    a, b = <span class="fuggveny">map</span>(<span class="fuggveny">int</span>, sys.stdin.readline().<span class="fuggveny">split</span>())</span>
-<span class="sor-szam">15</span><span class="sor-tartalom">    adj[a].<span class="fuggveny">append</span>(b)</span>
-<span class="sor-szam">16</span><span class="sor-tartalom">    indegree[b] += <span class="szam">1</span></span>
-<span class="sor-szam">17</span><span class="sor-tartalom"></span>
-<span class="sor-szam">18</span><span class="sor-tartalom">queue = <span class="fuggveny">deque</span>()</span>
-<span class="sor-szam">19</span><span class="sor-tartalom"><span class="kulcsszo">for</span> i <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(<span class="szam">1</span>, n + <span class="szam">1</span>):</span>
-<span class="sor-szam">20</span><span class="sor-tartalom">    <span class="kulcsszo">if</span> indegree[i] == <span class="szam">0</span>:</span>
-<span class="sor-szam">21</span><span class="sor-tartalom">        queue.<span class="fuggveny">append</span>(i)</span>
+<span class="sor-szam">13</span><span class="sor-tartalom">room_allocations = [<span class="szam">0</span>] * n</span>
+<span class="sor-szam">14</span><span class="sor-tartalom"></span>
+<span class="sor-szam">15</span><span class="sor-tartalom">booked_rooms = [] </span>
+<span class="sor-szam">16</span><span class="sor-tartalom"></span>
+<span class="sor-szam">17</span><span class="sor-tartalom">available_room_ids = []</span>
+<span class="sor-szam">18</span><span class="sor-tartalom"><span class="kulcsszo">for</span> i <span class="kulcsszo">in</span> <span class="fuggveny">range</span>(<span class="szam">1</span>, n + <span class="szam">1</span>):</span>
+<span class="sor-szam">19</span><span class="sor-tartalom">    heapq.<span class="fuggveny">heappush</span>(available_room_ids, i)</span>
+<span class="sor-szam">20</span><span class="sor-tartalom"></span>
+<span class="sor-szam">21</span><span class="sor-tartalom">max_rooms_needed = <span class="szam">0</span></span>
 <span class="sor-szam">22</span><span class="sor-tartalom"></span>
-<span class="sor-szam">23</span><span class="sor-tartalom">result = []</span>
-<span class="sor-szam">24</span><span class="sor-tartalom"></span>
-<span class="sor-szam">25</span><span class="sor-tartalom"><span class="kulcsszo">while</span> queue:</span>
-<span class="sor-szam">26</span><span class="sor-tartalom">    u = queue.<span class="fuggveny">popleft</span>()</span>
-<span class="sor-szam">27</span><span class="sor-tartalom">    result.<span class="fuggveny">append</span>(u)</span>
-<span class="sor-szam">28</span><span class="sor-tartalom"></span>
-<span class="sor-szam">29</span><span class="sor-tartalom">    <span class="kulcsswo">for</span> v <span class="kulcsswo">in</span> adj[u]:</span>
-<span class="sor-szam">30</span><span class="sor-tartalom">        indegree[v] -= <span class="szam">1</span></span>
-<span class="sor-szam">31</span><span class="sor-tartalom"></span>
-<span class="sor-szam">32</span><span class="sor-tartalom">        <span class="kulcsszo">if</span> indegree[v] == <span class="szam">0</span>:</span>
-<span class="sor-szam">33</span><span class="sor-tartalom">            queue.<span class="fuggveny">append</span>(v)</span>
-<span class="sor-szam">34</span><span class="sor-tartalom"></span>
-<span class="sor-szam">35</span><span class="sor-tartalom"><span class="kulcsszo">if</span> <span class="fuggveny">len</span>(result) == n:</span>
-<span class="sor-szam">36</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(*result)</span>
-<span class="sor-szam">37</span><span class="sor-tartalom"><span class="kulcsszo">else</span>:</span>
-<span class="sor-szam">38</span><span class="sor-tartalom">    <span class="fuggveny">print</span>(<span class="sztring">"IMPOSSIBLE"</span>)</span>
-        </pre>
+<span class="sor-szam">23</span><span class="sor-tartalom"><span class="kulcsszo">for</span> arrival, departure, original_index <span class="kulcsszo">in</span> customers:</span>
+<span class="sor-szam">24</span><span class="sor-tartalom">    <span class="kulcsszo">if</span> booked_rooms <span class="kulcsszo">and</span> booked_rooms[<span class="szam">0</span>][<span class="szam">0</span>] <span class="szam"><</span> arrival:</span>
+<span class="sor-szam">25</span><span class="sor-tartalom">        old_departure, room_id = heapq.<span class="fuggveny">heappop</span>(booked_rooms)</span>
+<span class="sor-szam">26</span><span class="sor-tartalom">        room_allocations[original_index] = room_id</span>
+<span class="sor-szam">27</span><span class="sor-tartalom">        heapq.<span class="fuggveny">heappush</span>(booked_rooms, (departure, room_id))</span>
+<span class="sor-szam">28</span><span class="sor-tartalom">    <span class="kulcsszo">else</span>:</span>
+<span class="sor-szam">29</span><span class="sor-tartalom">        room_id = heapq.<span class="fuggveny">heappop</span>(available_room_ids)</span>
+<span class="sor-szam">30</span><span class="sor-tartalom">        max_rooms_needed = <span class="fuggveny">max</span>(max_rooms_needed, room_id)</span>
+<span class="sor-szam">31</span><span class="sor-tartalom">        room_allocations[original_index] = room_id</span>
+<span class="sor-szam">32</span><span class="sor-tartalom">        heapq.<span class="fuggveny">heappush</span>(booked_rooms, (departure, room_id))</span>
+<span class="sor-szam">33</span><span class="sor-tartalom"></span>
+<span class="sor-szam">34</span><span class="sor-tartalom"><span class="fuggveny">print</span>(max_rooms_needed)</span>
+<span class="sor-szam">35</span><span class="sor-tartalom"><span class="fuggveny">print</span>(*(room_allocations))</span>
+                </pre>
             </div>
 
             <div class="kod-magyarazo-blokk">
-                <h4>1. Gráf építés (1–16. sor)</h4>
+                <h3>Előkészületek és rendezés (1-21. sorok)</h3>
 
-                <p>A program felépíti az irányított gráfot a függőségek alapján:</p>
-                <ul>
-                    <li><strong>Bemenet (4–7. sor):</strong> Beolvassuk a kurzusok <i>N</i> és a követelmények <i>M</i> számát.</li>
-                    <li><strong>Gráf struktúra (9–11. sor):</strong> Létrehozzuk a gráfreprezentációt:
-                        <ul>
-                            <li><strong><code>adj</code></strong> (szomszédsági lista): Tárolja, hogy az <i>A</i> kurzus mely <i>B</i> kurzusok előfeltétele (<i>A</i> ⟶ <i>B</i>).</li>
-                            <li><strong><code>indegree</code></strong> (bejövő élek száma): Tárolja, hány előfeltétele van még hátra egy kurzusnak.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Gráf feltöltése (13–16. sor):</strong> Minden beolvasott (<i>A</i>, <i>B</i>) követelmény esetén:
-                        <ul>
-                            <li>Hozzáadjuk az <i>A</i> ⟶ <i>B</i> élt: <code>adj[a].append(b)</code></li>
-                            <li>Növeljük <i>B</i> előfeltételeinek számát: <code>indegree[b] += 1</code></li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h4>2. Kezdő kurzusok betöltése (18–22. sor)</h4>
-
-                <p>Létrehozzuk a feldolgozáshoz szükséges sort:</p>
-                <ul>
-                    <li>Létrehozzuk a <code>queue</code>-t, ami az éppen elvégezhető kurzusokat tárolja.</li>
-                    <li>A sorba tesszük azokat a kurzusokat, amelyeknek a bejövő éleinek száma 0. Mivel ezeknek nincs előfeltétele, így azonnal elkezdhetők (19–21. sor).</li>
-                </ul>
-
-                <h4>3. Feldolgozás (23–33. sor)</h4>
-
-                <p>A <code>while</code> ciklus kiválasztja az elvégezhető kurzusokat, és frissíti a függőségeket:</p>
                 <ol>
-                    <li><strong>Kurzus kiválasztása (26–27. sor):</strong> Kivesszük az első elvégezhető kurzust a sorból, és hozzáadjuk a végső sorrendhez.</li>
-                    <li><strong>Függőségek oldása (29–33. sor):</strong> Végigmegyünk <code>u</code> összes <code>v</code> utódján:
+                    <li><strong>Bemenet beolvasása (4-9. sorok):</strong> <br>
+                        Beolvassuk az ügyfelek érkezési és távozási napjait. Fontos, hogy az ügyfél sorszámát is tároljuk, mert a kimenetnek ezt a sorrendet kell követnie. <code>(a, b, i)</code></li>
+                    <li><strong>Rendezés (11. sor):</strong> Az ügyfeleket érkezési napjuk szerint növekvő sorrendbe rendezzük. Ez a mohó stratégia alapja: mindig a legkorábban érkező ügyféllel foglalkozunk először.</li>
+                    <li><strong>Adatszerkezetek inicializálása (13-21. sorok):</strong>
                         <ul>
-                            <li>Csökkentjük <code>v</code> függőségeinek számát: <code>indegree[v] -= 1</code></li>
-                            <li>Ha <code>v</code> bejövő éleinek száma 0 lett, az azt jelenti, hogy <code>v</code> összes előfeltétele teljesült. Ekkor <code>v</code>-t hozzáadjuk a sorhoz: <code>queue.append(v)</code></li>
+                            <li><code>room_allocations</code>: Lista az <i>N</i> db ügyfél szobaszámainak tárolására.</li>
+                            <li><code>booked_rooms</code>: Egy min-heap (prioritási sor), ez tárolja a foglalt szobákat. A prioritást az adott szobában tartózkodó ügyfél távozási napja adja. Elemek formája: <code>(b, i)</code></li>
+                            <li><code>available_room_ids</code>: Egy min-heap, amely az 1-től <i>N</i>-ig terjedő, legkisebb elérhető szobaazonosítókat tárolja.</li>
+                            <li><code>max_rooms_needed</code>: Nyilvántartja a maximálisan felhasznált szobaazonosítót (a minimális szükséges szobaszámot).</li>
                         </ul>
                     </li>
                 </ol>
 
-                <h4>4. Eredmény Ellenőrzése (35–38. sor)</h4>
+                <h3>Ügyfelek Elhelyezése (23-32. sorok)</h3>
 
-                <ul>
-                    <li><strong>Megoldás van:</strong> Ha a <code>result</code> lista hossza megegyezik <i>N</i>-nel, kiírjuk az érvényes sorrendet.</li>
-                    <li><strong>IMPOSSIBLE:</strong> Ha a sorrend nem teljes, az azt jelenti, hogy maradtak feldolgozatlan kurzusok. Ebben az esetben a feladatot lehetetlen teljesíteni.</li>
-                </ul>
+                <p>Végigmegyünk a rendezett ügyfeleken. Minden ügyfél érkezésekor két eset lehetséges:</p>
+
+                <ol start="4">
+                    <li><strong>Szoba újrahasznosítása (24-27. sorok):</strong>
+                        <ul>
+                            <li><strong>Feltétel (24. sor):</strong> A <code>booked_rooms</code> heap gyökerében lévő távozási nap <code>booked_rooms[0][0]</code> kisebb, mint az aktuális ügyfél <code>arrival</code> érkezési napja, azaz a szoba felszabadult.</li>
+                            <li><strong>Mohó Lépés (25-27. sorok):</strong> Kivesszük a felszabadult szobát, majd ezt az azonosítót adjuk az aktuális ügyfélnek. Ezután az ügyfél távozási napjával és a régi azonosítóval betesszük a szobát a heapbe. A szoba sikeresen újra lett hasznosítva.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Új szoba kijelölése (28-32. sorok):</strong>
+                        <ul>
+                            <li><strong>Feltétel:</strong> A fenti feltétel nem teljesül, azaz minden foglalt szoba ügyfele még bent van az érkezéskor.</li>
+                            <li><strong>Mohó Lépés:</strong> Új szobát kell kijelölni. Kivesszük a legkisebb sorszámú új szobát.</li>
+                            <li>Frissítjük a szükséges szobaszámot.</li>
+                            <li>Az új szobát rögzítjük, és az ügyfél távozási napjával betesszük a <code>booked_rooms</code> heapbe.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>Kimenet (34-35. sorok)</h3>
+
+                <ol start="6">
+                    <li>Kiírjuk a minimális szükséges szobaszámot, majd a szobakiosztásokat az eredeti bemeneti sorrendben.</li>
+                </ol>
             </div>
             </div>
         </section>
@@ -168,114 +162,85 @@ Output:
         <section class="magyarazat">
             <h2>Magyarázat</h2>
 
-            <p>Egy kurzusfüggőségi problémát kellett megoldani. A cél, hogy a kurzusokat olyan sorrendbe tegyük, hogy minden előfeltétel teljesüljön.
-                A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rendezni.
-                A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy jól ismert topologikus rendezési algoritmus.
-                A logika, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
-            
-            <section class="vizualizacio-blokk">
-            <h3>Az algoritmus lépésről lépésre</h3>
-            
-            <div class="carousel-kontener">
-                <div class="carousel-track" id="carouselTrack">
-                    
-                    <!-- Minta
-                    <div class="carousel-step">
-                        <h3>Lépés 1: Inicializálás (Kahn-algoritmus)</h3>
-                        <img src="../kepek/kahn/01.webp" alt="A gráf beolvasása és az indegree tömb inicializálása">
-                        <p>Betöltjük a gráfot, és minden csúcsnál megszámoljuk a bejövő élek számát (indegree).</p>
-                    </div> -->
+            <p>Ez a feladat egy klasszikus <strong>intervallumütemezési probléma</strong>, amelyben a cél a minimális számú erőforrás (szoba) meghatározása és kiosztása az adott időintervallumok (ügyfél tartózkodások) kezelésére. A megoldás egy <strong>mohó algoritmust</strong> használ, min-heap adatszerkezetekkel.</p>
+ 
+            <h3>Miért a min-heap adatszerkezet?</h3>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/01.webp" alt="Kahn-algoritmus">
-                    </div>
+            <p>A <strong>min-heap</strong> egy speciális, <strong>fa-alapú adatszerkezet</strong>, melynek alapvető tulajdonsága, hogy minden szülő csomópont értéke kisebb vagy egyenlő a gyermekei értékénél.
+                Ebből következik a legfontosabb jellemző: <strong>a fa gyökere tartalmazza a halmaz legkisebb elemét.</strong></p>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/02.webp" alt="Kahn-algoritmus">
-                    </div>
+                <p>A min-heap a gyakorlatban gyakran egy tömbben van megvalósítva, ami lehetővé teszi a hatékony tárolást és a gyors műveleteket.</p>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/03.webp" alt="Kahn-algoritmus">
-                    </div>
+                <h4>Miért ideális a min-heap a feladathoz?</h4>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/04.webp" alt="Kahn-algoritmus">
-                    </div>
+                <p>A min-heap használata kulcsfontosságú a feladat hatékony mohó megoldásához, különösen a foglalt szobák nyilvántartásához. Az adatszerkezet optimalizálja a két legfontosabb műveletet:</p>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/05.webp" alt="Kahn-algoritmus">
-                    </div>
+                <ol>
+                    <li><strong>Gyors hozzáférés a leghamarabbi távozáshoz</strong>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/06.webp" alt="Kahn-algoritmus">
-                    </div>
-                    
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/07.webp" alt="Kahn-algoritmus">
-                    </div>
+                    <p>A mohó stratégiához mindig azt a szobát kell újrahasznosítani, amelyik a leghamarabb felszabadul. A <code>booked_rooms</code> heapben az elemek (távozási_nap, szoba_azonosító) formában vannak tárolva, a rendezési kulcs a távozási nap.</p>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/08.webp" alt="Kahn-algoritmus">
-                    </div>
+                    <ul>
+                        <li>A heap tulajdonságának köszönhetően a leghamarabbi távozási nap mindig a gyökérben található.</li>
+                        <li>Az ellenőrzés, hogy van-e felszabadítható szoba állandó idő alatt, azaz <span class="ordo">O</span>(1) alatt végezhető el.</li>
+                    </ul>
+                    <br>
+                </li>
+                    <li><strong>Hatékony felszabadítás és újrafoglalás</strong>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/09.webp" alt="Kahn-algoritmus">
-                    </div>
+                        <ul>
+                            <li><strong>Felszabadítás:</strong> A felszabaduló szoba kivétele a gyökérből: <code>heappop</code></li>
+                            <li><strong>Újrafoglalás:</strong> Az új, későbbi távozási dátummal történő visszatétel: <code>heappush</code></li>
+                        </ul>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/10.webp" alt="Kahn-algoritmus">
-                    </div>
+                        <p>Mindkét heap művelet logaritmikus időben, azaz <span class="ordo">O</span>(log N) idő alatt hajtódik végre, ahol <i>N</i> a foglalt szobák száma.</p>
+                    </li>
+                </ol>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/11.webp" alt="Kahn-algoritmus">
-                    </div>
+                <h4>A Két Min-Heap Szerepe a Kódban</h4>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/12.webp" alt="Kahn-algoritmus">
-                    </div>
+                <table border="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>Heap neve</th>
+                            <th>Tárolt adat</th>
+                            <th>Rendezési kulcs</th>
+                            <th>Funkció</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>booked_rooms</code></td>
+                            <td>(Távozási nap, Szoba ID)</td>
+                            <td><strong>Távozási nap</strong></td>
+                            <td>Mohó döntés alapja: megtalálni a leghamarabb felszabaduló szobát újrahasznosítás céljából.</td>
+                        </tr>
+                        <tr>
+                            <td><code>available_room_ids</code></td>
+                            <td>Szoba ID-k (1, 2, 3...)</td>
+                            <td><strong>Szoba ID</strong></td>
+                            <td>Garantálja, hogy új szoba igénylésekor mindig a legkisebb sorszámú, még nem használt szoba kerüljön kiosztásra.</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/13.webp" alt="Kahn-algoritmus">
-                    </div>
+            <h3>Időkomplexitás Elemzése</h3>
 
-                    <div class="carousel-step">
-                        <img src="../kepek/kahn/14.webp" alt="Kahn-algoritmus">
-                    </div>
+            <p>Az algoritmus időkomplexitása
+            <p style="text-align: center;"><strong><span class="ordo">O</span>(N log N)</strong>,</p>
 
-                </div>
-                
-                <div class="carousel-nav">
-                    <button class="prev" onclick="prevStep()">&#10094;</button>
-                    <button class="next" onclick="nextStep()">&#10095;</button>
-                </div>
-            </div>
-
-            <div class="step-counter" id="stepCounter">Lépés 1 / 4</div>
-
-        </section>
-            
-            <h3>Miért a <code>deque</code> adattípus?</h3>
-
-            <p>Hatékonyság miatt a standard Python <code>list</code> helyett a <code>deque</code> (Double-Ended Queue) adattípust használtuk.</p>
             <ul>
-                <li>A Kahn-algoritmus egy sort (Queue) igényel, ahol az elemeket a sor elejéről vesszük ki (FIFO).</li>
-                <li>A <code>deque.popleft()</code> művelet a sor elejéről történő eltávolítást garantálja konstans időben: <span class="ordo">O</span>(1).</li>
-                <li>Ha standard Python <code>list</code>-et használnánk a sor elejéről való kivételhez, a művelet <span class="ordo">O</span>(N) időkomplexitású lenne (az elemek eltolása miatt), ami rontaná a teljes algoritmus teljesítményét.</li>
+                <li>A leglassabb művelet az ügyfelek érkezési nap szerinti rendezése: <span class="ordo">O</span>(N log N).</li>
+                <li>A fő ciklus <i>N</i>-szer fut le, és minden iterációban legfeljebb két heap művelet történik (<code>heappop</code> és <code>heappush</code>). Mivel a heap mérete legfeljebb <i>N</i> és minden művelet <span class="ordo">O</span>(log N) időt vesz igénybe, ezért a ciklus teljes időkomplexitása <span class="ordo">O</span>(N log N).</li>
+                <li>Összességében az algoritmus időkomplexitása <span class="ordo">O</span>(N log N), ami rendkívül hatékony.</li>
             </ul>
-
-            <h3>Időkomplexitás</h3>
-
-            <p>Az algoritmus időkomplexitása:
-            <p style="text-align: center;"><strong><span class="ordo">O</span>(N + M)</strong>,</p>
-            <p>ahol <i>N</i> a kurzusok száma (csúcsok), és <i>M</i> a követelmények száma (élek).
-                Ez egy lineáris időben futó algoritmus, ami a lehető leggyorsabb. A komplexitás oka, hogy a teljes futásidő alatt minden csúcsot és minden élt pontosan egyszer dolgozunk fel.</p>
         </section>
 
         <section>
             <h2>Hasznos oldalak</h2>
             <ul>
-                <li><a href="https://hu.wikipedia.org/wiki/Topologikus_sorrend" target="_blank">Topologikus sorrend</a></li>
-                <li><a href="https://www.geeksforgeeks.org/dsa/topological-sorting-indegree-based-solution/" target="_blank">Kahn's algorithm for Topological Sorting</a></li>
+                <li><a href="https://www.geeksforgeeks.org/dsa/introduction-to-min-heap-data-structure/" target="_blank">Intoduction to Min-Heap</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Min-max_heap" target="_blank">Min-max heap</a></li>
             </ul>
         </section>
 
@@ -285,38 +250,5 @@ Output:
         <p>&copy; Pósfai Lőrinc, 2025</p>
     </footer>
 
-    <script>
-        const track = document.getElementById('carouselTrack');
-        const steps = track.querySelectorAll('.carousel-step');
-        const counter = document.getElementById('stepCounter');
-        let currentStep = 0;
-        const totalSteps = steps.length;
-
-        function updateCarousel() {
-            // A track mozgatása
-            const offset = -currentStep * 100;
-            track.style.transform = `translateX(${offset}%)`;
-
-            // A számláló frissítése
-            counter.textContent = `${currentStep + 1} / ${totalSteps}`;
-        }
-
-        function nextStep() {
-            if (currentStep < totalSteps - 1) {
-                currentStep++;
-                updateCarousel();
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                updateCarousel();
-            }
-        }
-
-        // Kezdeti állapot beállítása
-        updateCarousel();
-    </script>
 </body>
 </html>

@@ -44,11 +44,11 @@
             <section class="spec-blokk">
                 <h3>Korlátozások</h3>
                 <p>
-                    1 &le; <i>n</i> &le; 10<sup>5</sup>
+                    1 &le; <i>N</i> &le; 10<sup>5</sup>
                     <br>
-                    1 &le; <i>m</i> &le; 2 &sdot; 10<sup>5</sup>
+                    1 &le; <i>M</i> &le; 2 &sdot; 10<sup>5</sup>
                     <br>
-                    1 &le; <i>a,b</i> &le; 10<sup>5</sup>
+                    1 &le; <i>A, B</i> &le; 10<sup>5</sup>
                     </p>
             </section>
 
@@ -169,9 +169,9 @@ Output:
             <h2>Magyarázat</h2>
 
             <p>Egy kurzusfüggőségi problémát kellett megoldani. A cél, hogy a kurzusokat olyan sorrendbe tegyük, hogy minden előfeltétel teljesüljön.
-                A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rendezni.
+                A problémát át lehet úgy is fogalmazni, hogy a kurzusokat <strong>topologikus sorrendbe</strong> kell rakni.
                 A fent bemutatott kód a <strong>Kahn-algoritmus</strong> implementációja, ami egy ismert topologikus rendezési algoritmus.
-                A logika, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
+                A logika fő gondolata, hogy mindig azokkal a kurzusokkal kezdünk, amelyeknek nincs függősége, majd feloldjuk a rájuk épülő kurzusok függőségeit.</p>
             
             <section class="vizualizacio-blokk">
             <h3>Az algoritmus lépésről lépésre</h3>

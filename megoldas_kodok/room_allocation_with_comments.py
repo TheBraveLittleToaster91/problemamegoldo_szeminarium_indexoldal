@@ -35,7 +35,7 @@ def solve():
     
     # Min-heap a szobák szabaddá válási napjainak tárolására
     # Elemek: (távozás_napja, szoba_ID)
-    free_rooms = [] 
+    booked_rooms = [] 
     
     # Heap a szabad szoba ID-k tárolására
     # Mivel szeretnénk a legkisebb, már felszabadult szobát újrahasználni,
@@ -51,18 +51,18 @@ def solve():
     for arrival, departure, original_index in customers:
         
         # Van-e már felszabadult szoba a legkorábban felszabadulók közül?
-        # Feltétel: free_rooms teteje (távozás napja) < arrival
-        if free_rooms and free_rooms[0][0] < arrival:
+        # Feltétel: booked_rooms teteje (távozás napja) < arrival
+        if booked_rooms and booked_rooms[0][0] < arrival:
             
             # 1. Újrahasznosítás: Kiveszünk egy felszabadult szobát
             # A szoba legkorábbi távozási napja (old_departure) és ID-ja
-            old_departure, room_id = heapq.heappop(free_rooms)
+            old_departure, room_id = heapq.heappop(booked_rooms)
             
             # 2. Hozzárendelés: Az ügyfél megkapja a felszabadult szobát
             room_allocations[original_index] = room_id
             
             # 3. Frissítés: A szoba új szabaddá válási napját betesszük a heap-be
-            heapq.heappush(free_rooms, (departure, room_id))
+            heapq.heappush(booked_rooms, (departure, room_id))
 
         else:
             # 1. Új szoba kell: Növeljük a felhasznált szobák számát (max_rooms_needed)
@@ -74,7 +74,7 @@ def solve():
             room_allocations[original_index] = room_id
             
             # 3. Frissítés: Az új szoba távozási napját betesszük a heap-be
-            heapq.heappush(free_rooms, (departure, room_id))
+            heapq.heappush(booked_rooms, (departure, room_id))
 
 
     # --- Output ---
